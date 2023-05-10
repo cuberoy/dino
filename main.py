@@ -66,11 +66,17 @@ BIRD_ANIMATION_COOLDOWN = 200
 SCORE_INCREMENT_EVENT = pygame.USEREVENT + 3
 SCORE_INCREMENT_COOLDOWN = 100
 
+BACKGROUND_CHANGE_EVENT = pygame.USEREVENT + 4
+BACKGROUND_CHANGE_TIMEOUT = 1530
+BACKGROUND_CHANGE_COOLDOWN = 6
+
 high_score = ''
+background_color = WHITE
 
 def draw(score, high_score, grains, clouds, dino_sprite, dino, cactus_sprites, cacti, bird_frame, birds):
     # Draw Background
-    WIN.fill(WHITE)
+    global background_color
+    WIN.fill(background_color)
 
     # Draw Ground
     pygame.draw.rect(WIN, GREY, GROUND)
@@ -134,12 +140,29 @@ def get_dino_rect(dino_sprite, dino_y_pos):
 def start_game():
     wait_for_input = True
 
+    # Draw Background
+    WIN.fill(WHITE)
+
+    # Draw Ground
+    pygame.draw.rect(WIN, GREY, GROUND)
+
+    # Draw Dino
+    dino = get_dino_rect(DINO_JUMP, get_sprite_ground_y_pos(DINO_JUMP))
+    WIN.blit(DINO_JUMP, (dino.x, dino.y))
+
+    # Update
+    pygame.display.update()
+
     while wait_for_input:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
-
+        # Get list of keys pressed
+        keys = pygame.key.get_pressed()
+        # Restart the game
+        if keys[pygame.K_SPACE] or keys[pygame.K_UP]:
+            return
 
 def main():
     run = True
@@ -149,10 +172,8 @@ def main():
     last_update_blink_score = pygame.time.get_ticks()
     last_cactus_time = pygame.time.get_ticks()
 
-    #
     start_time = time.time()
     elasped_time = 0
-    #
 
     score = 0
     score_text = ''
@@ -197,6 +218,13 @@ def main():
     pygame.time.set_timer(SCORE_INCREMENT_EVENT, SCORE_INCREMENT_COOLDOWN)
 
     global high_score
+    global background_color
+    background_color = WHITE
+    rgb = 255
+    background_700_target = 1
+    background_900_target = 1
+    white_to_black = True
+    
     wait_for_input = False
 
     while run:
@@ -239,7 +267,34 @@ def main():
                 score_incrementer = min(2.0, 1 + score / 700)
                 score += score_incrementer
 
+            # Event handle background color
+            if event.type == BACKGROUND_CHANGE_EVENT:
+                if white_to_black:
+                    rgb -= 1
+                    if rgb < 0:
+                        pygame.time.set_timer(BACKGROUND_CHANGE_EVENT, 0)
+                    else:
+                        background_color = (rgb, rgb, rgb)
+                else:
+                    rgb += 1
+                    if rgb > 255:
+                        pygame.time.set_timer(BACKGROUND_CHANGE_EVENT, 0)
+                    else:
+                        background_color = (rgb, rgb, rgb)
+
         score_text = '{:05d}'.format(math.floor(score))
+
+        # Every 700 points
+        if int(score) >= 700 * background_700_target:
+            pygame.time.set_timer(BACKGROUND_CHANGE_EVENT, BACKGROUND_CHANGE_COOLDOWN)
+            white_to_black = True
+            background_700_target += 1
+
+        # Every 240 points more than 700 points
+        if int(score) >= 700 * background_900_target + 240:
+            pygame.time.set_timer(BACKGROUND_CHANGE_EVENT, BACKGROUND_CHANGE_COOLDOWN)
+            white_to_black = False
+            background_900_target += 1
 
         # Every 100 points
         if int(score) >= 100 * score_target:
@@ -378,6 +433,9 @@ def main():
         if check_collision(dino_sprite, dino, obstacle_sprites, obstacle_rects):
             DEAD_SOUND.play()
             dino_sprite = DINO_DEAD
+            pygame.time.set_timer(SCORE_BLINK_EVENT, 0)
+            pygame.time.set_timer(BACKGROUND_CHANGE_EVENT, 0)
+            score_text = '{:05d}'.format(math.floor(score))
             hit = True
         else:
             obstacle_sprites.clear()
@@ -388,8 +446,6 @@ def main():
 
         if hit:
             wait_for_input = True
-            score_text = '{:05d}'.format(math.floor(score))
-            pygame.time.set_timer(SCORE_BLINK_EVENT, 0)
 
             # Draw score
             gameover_text = FONT.render("G A M E  O V E R", 1, GREY)
@@ -419,4 +475,5 @@ def main():
             main()
 
 if __name__ == '__main__':
+    start_game()
     main()
