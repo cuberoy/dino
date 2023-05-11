@@ -273,12 +273,14 @@ def main():
                     rgb -= 1
                     if rgb < 0:
                         pygame.time.set_timer(BACKGROUND_CHANGE_EVENT, 0)
+                        rgb = 0
                     else:
                         background_color = (rgb, rgb, rgb)
                 else:
                     rgb += 1
                     if rgb > 255:
                         pygame.time.set_timer(BACKGROUND_CHANGE_EVENT, 0)
+                        rgb = 255
                     else:
                         background_color = (rgb, rgb, rgb)
 
