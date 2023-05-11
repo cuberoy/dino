@@ -191,7 +191,7 @@ def main():
     cloud_ms_count = 0
     clouds = []
 
-    cactus_add_increment = random.randint(500, 1200)
+    cactus_add_increment = random.randint(600, 1100)
     cactus_ms_count = 0
     cacti = []
     cactus_sprites = []
@@ -379,13 +379,13 @@ def main():
             cloud_ms_count = 0
 
         # Add bird
-        if score >= 200 and (bird_ms_count > bird_add_increment - 800) and (current_time - last_cactus_time > 800):
+        if score >= 200 and (bird_ms_count > bird_add_increment - 850) and (current_time - last_cactus_time > 850):
             bird_sprite = BIRD_FRAMES[bird_frame]
             bird = pygame.Rect(WIDTH, random.choice(BIRD_HEIGHTS), bird_sprite.get_width(), bird_sprite.get_height())
             bird_sprites.append(bird_sprite)
             birds.append(bird)
             bird_add_increment = random.randint(2500, 3000)
-            cactus_add_increment = random.randint(500, 1100)
+            cactus_add_increment = random.randint(600, 1100)
             bird_ms_count = 0
             cactus_ms_count = 0
 
@@ -395,7 +395,7 @@ def main():
             cactus = pygame.Rect(WIDTH, get_sprite_ground_y_pos(cactus_sprite), cactus_sprite.get_width(), cactus_sprite.get_height())
             cactus_sprites.append(cactus_sprite)
             cacti.append(cactus)
-            cactus_add_increment = random.randint(500, 1100)
+            cactus_add_increment = random.randint(600, 1100)
             cactus_ms_count = 0
             last_cactus_time = current_time
 
