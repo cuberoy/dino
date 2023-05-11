@@ -1,5 +1,7 @@
 # About
-A replica of the Google Chrome's offline dinosaur game using the PYGAME module on python.
+A replica of Google Chrome's offline dinosaur game using the PYGAME module on Python.
+
+## Requirement
 pip install pygame
 
 ## COPYRIGHT
