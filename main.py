@@ -1,3 +1,7 @@
+# Author: cuberoy
+# Created: 6 May 2023
+# Email: roytan2911@gmail.com
+
 import pygame
 import time
 import random
