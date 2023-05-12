@@ -1,7 +1,7 @@
 # About
 A replica of Google Chrome's offline dinosaur game using the PYGAME module on Python.
 
-[Dinosaur Pygame](https://github.com/cuberoy/dino/blob/main/gameplay.gif)
+<img src="https://github.com/cuberoy/dino/blob/main/gameplay.gif">
 
 ## Requirement
 pip install pygame
